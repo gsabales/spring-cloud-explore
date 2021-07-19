@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/mobile-app-ws/pom.xml" />
+        <option value="$PROJECT_DIR$/photo-app-api-users/pom.xml" />
+        <option value="$PROJECT_DIR$/photoapp-api-account/pom.xml" />
+        <option value="$PROJECT_DIR$/photo-app-discovery-service/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="11" project-jdk-type="JavaSDK" />
+</project>

@@ -1,0 +1,65 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes[0]:
+        id: users-status-check
+        uri: lb://photo-app-api-users # lb - load balancer, then name of microservice registered in eureka
+        predicates[0]: Path=/users-ws/users/status/check # Conditions for routing
+        predicates[1]: Method=GET
+        predicates[2]: Header=Authorization, Bearer (.*) # Requires Authorization header with bearer token (regex)
+        filters[0]: RemoveRequestHeader=Cookie
+        filters[1]: RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+        filters[2]: AuthorizationHeaderFilter # Custom Java class to validate authorization header before routing to specific endpoint
+
+      routes[1]:
+        id: users-ws-create
+        uri: lb://photo-app-api-users
+        predicates[0]: Path=/users-ws/users
+        predicates[1]: Method=POST
+        filters[0]: RemoveRequestHeader=Cookie
+        filters[1]: RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+
+      routes[2]:
+        id: users-ws-login
+        uri: lb://photo-app-api-users
+        predicates[0]: Path=/users-ws/users/login
+        predicates[1]: Method=POST
+        filters[0]: RemoveRequestHeader=Cookie
+        filters[1]: RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+
+      routes[3]:
+        id: users-ws-get-update-delete
+        uri: lb://photo-app-api-users # lb - load balancer, then name of microservice registered in eureka
+        predicates[0]: Path=/users-ws/users # Conditions for routing
+        predicates[1]: Method=GET, PUT, DELETE
+        predicates[2]: Header=Authorization, Bearer (.*) # Requires Authorization header with bearer token (regex)
+        filters[0]: RemoveRequestHeader=Cookie
+        filters[1]: RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+  config:
+    import: optional:configserver:http://localhost:8012
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8010/eureka
+#      predicates[0]: Path=/users-ws/users/
+  instance:
+    prefer-ip-address: true
+#    hostname: localhost
+
+token:
+  secret: tokenSecret
+
+

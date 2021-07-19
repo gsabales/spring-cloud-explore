@@ -1,0 +1,15 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: photoapp-api-account
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8010/eureka # Fully qualified url by which Eureka clients communicate with the server
+

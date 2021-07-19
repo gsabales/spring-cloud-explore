@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/mobile-app-ws/mobile-app-ws.iml" filepath="$PROJECT_DIR$/mobile-app-ws/mobile-app-ws.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photo-app-discovery-service/photo-app-discovery-service.iml" filepath="$PROJECT_DIR$/photo-app-discovery-service/photo-app-discovery-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photoapp-api-account/photoapp-api-account.iml" filepath="$PROJECT_DIR$/photoapp-api-account/photoapp-api-account.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photo-app-api-users/photoapp-api-users.iml" filepath="$PROJECT_DIR$/photo-app-api-users/photoapp-api-users.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/spring cloud explore.iml" filepath="$PROJECT_DIR$/.idea/spring cloud explore.iml" />
+    </modules>
+  </component>
+</project>

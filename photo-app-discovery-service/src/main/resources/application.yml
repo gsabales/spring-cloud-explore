@@ -1,0 +1,13 @@
+server:
+  port: 8010
+spring:
+  application:
+    name: discoveryservice
+eureka:
+  client:
+    register-with-eureka: false # Prevents this service to treat this as a eureka client
+    fetch-registry: false # Prevents this service to fetch registry normally done by a client
+    service-url:
+      defaultZone: http://localhost:8010/eureka # Fully qualified url by which Eureka clients communicate with the server
+  instance:
+    prefer-ip-address: true

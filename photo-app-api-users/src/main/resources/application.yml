@@ -1,0 +1,52 @@
+server:
+  port: ${PORT:0}
+#  port: 0 # Automatically assign port number; Current port number is configured remotely in config server
+spring:
+  application:
+    name: photo-app-api-users
+  datasource:
+    username: xxx
+    password: xxx
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  config:
+    # Added this property instead of creating boostrap.properties file. The URI is where the config server is running
+    import: optional:configserver:http://localhost:8012
+#  devtools: # Automatically restart/redeploy application upon code change. But for IntelliJ, additional config is required
+#    restart:
+#      enabled: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8010/eureka # Fully qualified url by which Eureka clients communicate with the server
+  instance:
+    hostname: localhost
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} #Identifier for multiple application instances
+    # For user defined instance id, run the following command:
+    # mvn spring-boot:run -Dspring-boot.run.arguments="--spring.application.instance_id=glenn --server.port=8999"
+
+login:
+  url:
+    path: /users/login
+
+token:
+  secret: tokenSecret
+  expiration: 864000000
+
+management.endpoints.web.exposure.include: "*" # Enables all spring boot actuator endpoints
+
+my:
+  configuration: Local test string

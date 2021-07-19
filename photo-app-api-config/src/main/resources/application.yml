@@ -1,0 +1,27 @@
+server:
+  port: 8012
+spring:
+  application:
+    name: PhotoAppAPIConfigServer
+  cloud:
+    config:
+      server:
+        git:
+          username: gsabales
+#          password: allenWalker21
+          password: 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 # github token
+          clone-on-start: true
+          default-label: main
+          uri: https://github.com/gsabales/PhotoAppConfig # From remote git repo
+          # uri: file://${HOME}/Desktop/My Projects/configrepo # From local git repo
+  rabbitmq:
+    host: localhost
+    # The 5672 port number is used by AMQP(Advanced Message Queuing Protocol) clients. But if you need to use HTTP client or web then it is 15672.
+    port: 5672
+    username: guest
+    password: guest
+management:
+  endpoints:
+    web:
+      exposure:
+        include: busrefresh
