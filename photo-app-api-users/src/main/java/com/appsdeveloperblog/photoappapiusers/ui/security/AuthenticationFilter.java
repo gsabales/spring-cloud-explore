@@ -14,11 +14,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -27,14 +25,12 @@ import java.util.Date;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private UserService userService;
-    private String tokenSecret;
-    private String tokenExpiration;
+    private ExternalProperties properties;
 
-    public AuthenticationFilter(UserService userService, String tokenSecret, String tokenExpiration,
-                                AuthenticationManager authenticationManager) {
+    public AuthenticationFilter(UserService userService, ExternalProperties properties,
+                                AuthenticationManager authenticationManager ) {
         this.userService = userService;
-        this.tokenSecret = tokenSecret;
-        this.tokenExpiration = tokenExpiration;
+        this.properties = properties;
         super.setAuthenticationManager(authenticationManager);
     }
 
@@ -61,23 +57,22 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
+                                            Authentication authResult) {
         String username = ((User)authResult.getPrincipal()).getUsername();
         UserResponse userResponse = userService.getUserResponseByEmail(username);
         String token = generateJWT(userResponse.getUserId());
 
-        System.out.println("Token secret from users ms: " + tokenSecret);
         response.addHeader("userId", userResponse.getUserId());
         response.addHeader("token", token);
     }
 
-    private String generateJWT(String userId) throws UnsupportedEncodingException {
-        String signingKeyB64= Base64.getEncoder().encodeToString(tokenSecret.getBytes(StandardCharsets.UTF_8));
+    private String generateJWT(String userId) {
+        String signingKeyB64= Base64.getEncoder()
+                .encodeToString(properties.getTokenSecret().getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
                 .setSubject(userId)
-                .setId(tokenSecret) // TODO: To be removed
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(tokenExpiration)))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(properties.getTokenExpiration())))
                 .signWith(SignatureAlgorithm.HS256, signingKeyB64)
                 .compact();
     }

@@ -2,7 +2,6 @@ package com.appsdeveloperblog.photoappapiusers.ui.security;
 
 import com.appsdeveloperblog.photoappapiusers.ui.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,20 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private String tokenSecret;
-    private String tokenExpiration;
-    private String loginUrl;
     private BCryptPasswordEncoder encoder;
     private UserService userService;
+    private ExternalProperties properties;
 
     @Autowired
-    public WebSecurity(@Value("${token.secret}") String tokenSecret,
-                       @Value("${token.expiration}") String tokenExpiration,
-                       @Value("${login.url.path}") String loginUrl,
-                       BCryptPasswordEncoder encoder, UserService userService) {
-        this.tokenSecret = tokenSecret;
-        this.tokenExpiration = tokenExpiration;
-        this.loginUrl = loginUrl;
+    public WebSecurity(ExternalProperties properties, BCryptPasswordEncoder encoder, UserService userService) {
+        this.properties = properties;
         this.encoder = encoder;
         this.userService = userService;
     }
@@ -46,8 +38,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     private AuthenticationFilter getAuthenticationFilter() throws Exception {
-        AuthenticationFilter filter = new AuthenticationFilter(userService, tokenSecret, tokenExpiration, authenticationManager());
-        filter.setFilterProcessesUrl(loginUrl);
+        AuthenticationFilter filter = new AuthenticationFilter(userService, properties, authenticationManager());
+        filter.setFilterProcessesUrl(properties.getLoginUrl());
         return filter;
     }
 
